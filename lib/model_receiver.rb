@@ -1,6 +1,5 @@
 require 'model_receiver/app'
 require 'orm_proxy'
-require 'active_support/core_ext/string/inflections'
 
 class ModelReceiver
 
