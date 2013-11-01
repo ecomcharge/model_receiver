@@ -1,4 +1,5 @@
 require 'model_receiver/app'
+require 'orm_proxy'
 require 'active_support/core_ext/string/inflections'
 
 class ModelReceiver
@@ -21,24 +22,12 @@ class ModelReceiver
     model = params.keys.first
     add_error("Can't recognize model name") && return unless model
 
-    update_db(model, params[model])
+    ORMProxy.build(model, params[model]).update_db
   end
 
   private
   def add_error(error)
     @errors << error
-  end
-
-  def update_db(model, attrs)
-    klass = model.classify.constantize
-
-    record = klass.find_by_id(attrs['id'])
-    if record
-      attrs.delete('id')
-      record.update_attributes(attrs, without_protection: true)
-    else
-      klass.create!(attrs, without_protection: true)
-    end
   end
 
 end
