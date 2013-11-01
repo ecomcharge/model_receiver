@@ -23,6 +23,4 @@ class ORMProxy
     model_name.classify.constantize
   end
 
-
-
 end
