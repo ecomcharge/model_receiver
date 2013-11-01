@@ -35,5 +35,4 @@ describe ORMProxy::ActiveRecord do
 
   end
 
-
 end
