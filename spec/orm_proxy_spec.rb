@@ -39,4 +39,32 @@ describe ORMProxy do
     end
   end
 
+  describe ".initialize" do
+    let(:model_name) { 'shops' }
+    let(:attributes) { {'id' => 1, 'name' => 'name', 'title' => 'title' } }
+
+    subject { described_class.new(model_name, attributes) }
+
+    context "when model responds to 'column_names'" do
+      class Shop
+        def self.column_names
+          ['id', 'name']
+        end
+      end
+
+      it "sets only attributes which has model" do
+        expect(subject.attributes).to eq({'id' => 1, 'name' => 'name'})
+      end
+    end
+
+    context "when model doesn't respond to 'column_names'" do
+      let(:model_name) { 'cars' }
+      class Car;end
+
+      it "sets all passed attributes" do
+        expect(subject.attributes).to eq(attributes)
+      end
+    end
+  end
+
 end

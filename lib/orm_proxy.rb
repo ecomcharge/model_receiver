@@ -15,12 +15,21 @@ class ORMProxy
   attr_reader :model_name, :attributes
   def initialize(model_name, attributes)
     @model_name = model_name
-    @attributes = attributes
+    @attributes = prepare_attributes(attributes)
   end
 
   protected
   def model_klass
     model_name.classify.constantize
+  end
+
+  def prepare_attributes(attrs)
+    if model_klass.respond_to?(:column_names)
+      columns = model_klass.column_names
+      attrs.select { |k,v| columns.include?(k) }
+    else
+      attrs
+    end
   end
 
 end
