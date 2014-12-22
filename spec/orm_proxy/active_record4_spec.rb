@@ -14,8 +14,8 @@ describe ORMProxy::ActiveRecord4 do
 
       context "when record doesn't exist" do
         it "adds new record" do
-          Shop.should_receive(:find_by_id).with(1).and_return(nil)
-          Shop.should_receive(:create!).with(attributes)
+          expect(Shop).to receive(:find_by_id).with(1).and_return(nil)
+          expect(Shop).to receive(:create!).with(attributes)
 
           proxy.update_db
         end
@@ -25,8 +25,8 @@ describe ORMProxy::ActiveRecord4 do
         let(:record) { double('record') }
 
         it "updates record" do
-          Shop.should_receive(:find_by_id).with(1).and_return(record)
-          record.should_receive(:update_attributes).with(attrs_for_update)
+          expect(Shop).to receive(:find_by_id).with(1).and_return(record)
+          expect(record).to receive(:update_attributes).with(attrs_for_update)
 
           proxy.update_db
         end

@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "model_receiver"
-  s.version     = "0.1.2"
+  s.version     = "0.1.3"
   s.authors     = ["Mikhail Davidovich"]
   s.email       = ["mihaildv@gmail.com"]
   s.homepage    = ""
@@ -21,6 +21,4 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency(%q<rack-contrib>, [">= 0"])
   s.add_runtime_dependency(%q<activesupport>, [">=0"])
   s.add_development_dependency(%q<rspec>, [">= 2.14.1"])
-  s.add_development_dependency(%q<debugger>, [">= 1.6.2"])
-  s.add_development_dependency(%q<rack-test>, [">=0"])
 end

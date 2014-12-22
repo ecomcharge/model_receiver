@@ -19,7 +19,7 @@ describe ORMProxy do
       end
 
       it "initializes ORMProxy::ActiveRecord4" do
-        ORMProxy::ActiveRecord4.should_receive(:new).with(model, attributes)
+        expect(ORMProxy::ActiveRecord4).to receive(:new).with(model, attributes)
 
         ORMProxy.build(model, attributes)
       end
@@ -32,7 +32,7 @@ describe ORMProxy do
       end
 
       it "initializes ORMProxy::ActiveRecord" do
-        ORMProxy::ActiveRecord.should_receive(:new).with(model, attributes)
+        expect(ORMProxy::ActiveRecord).to receive(:new).with(model, attributes)
 
         ORMProxy.build(model, attributes)
       end
