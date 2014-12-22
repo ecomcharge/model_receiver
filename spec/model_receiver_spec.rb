@@ -12,8 +12,8 @@ describe ModelReceiver do
       let(:orm_proxy) { double('orm_proxy') }
 
       it "calls update_db method of ORMProxy" do
-        ORMProxy.should_receive(:build).with('shops', attributes).and_return(orm_proxy)
-        orm_proxy.should_receive(:update_db)
+        expect(ORMProxy).to receive(:build).with('shops', attributes).and_return(orm_proxy)
+        expect(orm_proxy).to receive(:update_db)
 
         model.modify
       end
@@ -25,27 +25,26 @@ describe ModelReceiver do
       it "sets error" do
         model.modify
 
-        model.error.should == "Can't recognize model name"
+        expect(model.error).to eq("Can't recognize model name")
       end
     end
   end
 
   describe "#has_error?" do
-    context "when model has error" do
-      let(:model) { described_class.new({}) }
+    let(:model) { described_class.new({}) }
+    subject { model.has_error? }
 
-      before { model.instance_variable_set(:@errors, ['error']) }
+    context "when model has error" do
+      before  { model.send(:add_error, 'error') }
 
       it "returns true" do
-        model.has_error?.should be_true
+        expect(subject).to be true
       end
     end
 
     context "when model hasn't error" do
-      let(:model) { described_class.new({}) }
-
       it "returns false" do
-        model.has_error?.should be_false
+        expect(subject).to be false
       end
     end
   end
@@ -54,8 +53,9 @@ describe ModelReceiver do
     let(:model) { described_class.new({}) }
 
     before { model.instance_variable_set(:@errors, ['Error1', 'Error2']) }
+
     it "returns error" do
-      model.error.should == 'Error1. Error2'
+      expect(model.error).to eq('Error1. Error2')
     end
   end
 end

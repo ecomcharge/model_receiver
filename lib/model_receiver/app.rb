@@ -9,7 +9,9 @@ class ModelReceiver
       headers('Content-Type' => 'text/plain')
 
       args = params
-      args = env['action_dispatch.request.request_parameters'] if defined?(Rails)
+      unless args.is_a?(Hash)
+        args = env['action_dispatch.request.request_parameters'] || env['rack.request.form_hash']
+      end
 
       model = ModelReceiver.new(args)
       model.modify

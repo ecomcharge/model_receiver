@@ -15,7 +15,7 @@ describe ModelReceiver::App do
       end
 
     it "modifies model data according with passed attributes" do
-      ModelReceiver.should_receive(:new).with(attributes)
+      expect(ModelReceiver).to receive(:new).with(attributes)
         .and_return(double(has_error?: false, modify: true))
 
       post "/", content, headers
@@ -24,32 +24,32 @@ describe ModelReceiver::App do
     context "when model has error" do
       let(:model) { double('model', has_error?: true, error: 'error', modify: true) }
 
-      before { ModelReceiver.should_receive(:new).with(attributes).and_return(model) }
+      before { expect(ModelReceiver).to receive(:new).with(attributes).and_return(model) }
 
       it "returns 422 status" do
-        response.status.should == 422
+        expect(response.status).to eq(422)
       end
 
       it "returns error message" do
-        response.body.should == 'error'
+        expect(response.body).to eq('error')
       end
     end
 
     context "when model hasn't error" do
       let(:model) { double('model', has_error?: false, modify: true) }
 
-      before { ModelReceiver.should_receive(:new).with(attributes).and_return(model) }
+      before { expect(ModelReceiver).to receive(:new).with(attributes).and_return(model) }
 
       it "returns 200 status" do
-        response.status.should == 200
+        expect(response.status).to eq(200)
       end
 
       it "returns OK text" do
-        response.body.should == 'OK'
+        expect(response.body).to eq('OK')
       end
 
       it "returns Content-Type='text/plain' " do
-        response.headers.should include('Content-Type' => 'text/plain')
+        expect(response.headers).to include('Content-Type' => 'text/plain')
       end
     end
   end
