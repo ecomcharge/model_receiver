@@ -54,7 +54,7 @@ describe ModelReceiver::App do
     end
   end
 
-  describe "POST request to /desctroy" do
+  describe "POST request to /destroy" do
     let(:headers)    { {'CONTENT_TYPE' => 'application/json'}  }
     let(:content)    { '{"models":{"id":1,"name":"test"}}' }
     let(:attributes) { { 'models' => { 'id' => 1, 'name' => 'test' } } }

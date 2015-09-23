@@ -59,7 +59,7 @@ describe ModelReceiver do
     end
   end
 
-  describe "#desctroy" do
+  describe "#destroy" do
     let(:params) { { 'shops' => attributes } }
     let(:model)  { described_class.new(params) }
     let(:attributes) { {'id' => 1, 'name' => 'test'} }
