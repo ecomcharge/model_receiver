@@ -10,6 +10,7 @@ end
 
 group :test do
   gem 'rack-test'
+  gem 'byebug'
 end
 
 group :guard_linux do

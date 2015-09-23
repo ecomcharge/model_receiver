@@ -18,6 +18,18 @@ class ORMProxy
     @attributes = prepare_attributes(attributes)
   end
 
+  def destroy
+    primary_key = model_klass.primary_key
+    search_attributes = attributes
+
+    if primary_key && attributes[primary_key]
+      search_attributes = {primary_key => attributes[primary_key]}
+    end
+
+    record = model_klass.where(search_attributes).first
+    record.destroy! if record
+  end
+
   protected
   def model_klass
     model_name.classify.constantize

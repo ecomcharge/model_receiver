@@ -35,4 +35,39 @@ describe ORMProxy::ActiveRecord4 do
 
   end
 
+  describe "#destroy" do
+    let(:model)  { 'shops' }
+    let(:attributes) { {'id' => 1, 'name' => 'test'} }
+    let(:attrs_for_update) { {'name' => 'test'} }
+    let(:record) { double('record') }
+    let(:records) { [record] }
+
+    let(:proxy) { described_class.new(model, attributes) }
+
+    context "when model class exists" do
+      class Shop; end
+
+      context "when primary key is present" do
+        it "destroys by primary key" do
+          expect(Shop).to receive(:primary_key).and_return('id')
+          expect(Shop).to receive(:where).with('id' => 1).and_return(records)
+          expect(record).to receive(:destroy!)
+
+          proxy.destroy
+        end
+      end
+
+      context "when primary key isn't present" do
+        it "destroys by attributes" do
+          expect(Shop).to receive(:primary_key).and_return(nil)
+          expect(Shop).to receive(:where).with(attributes).and_return(records)
+          expect(record).to receive(:destroy!)
+
+          proxy.destroy
+        end
+      end
+    end
+
+  end
+
 end

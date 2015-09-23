@@ -58,4 +58,32 @@ describe ModelReceiver do
       expect(model.error).to eq('Error1. Error2')
     end
   end
+
+  describe "#destroy" do
+    let(:params) { { 'shops' => attributes } }
+    let(:model)  { described_class.new(params) }
+    let(:attributes) { {'id' => 1, 'name' => 'test'} }
+    let(:attrs_for_update) { {'name' => 'test'} }
+
+    context "when model class exists" do
+      let(:orm_proxy) { double('orm_proxy') }
+
+      it "calls destroy method of ORMProxy" do
+        expect(ORMProxy).to receive(:build).with('shops', attributes).and_return(orm_proxy)
+        expect(orm_proxy).to receive(:destroy)
+
+        model.destroy
+      end
+    end
+
+    context "when parameters don't contain model name" do
+      let(:params) { {} }
+
+      it "sets error" do
+        model.destroy
+
+        expect(model.error).to eq("Can't recognize model name")
+      end
+    end
+  end
 end

@@ -18,15 +18,25 @@ class ModelReceiver
   end
 
   def modify
-    model = params.keys.first
-    add_error("Can't recognize model name") && return unless model
+    orm_proxy && orm_proxy.update_db
+  end
 
-    ORMProxy.build(model, params[model]).update_db
+  def destroy
+    orm_proxy && orm_proxy.destroy
   end
 
   private
   def add_error(error)
     @errors << error
+  end
+
+  def orm_proxy
+    @orm_proxy ||= begin
+                     model = params.keys.first
+                     add_error("Can't recognize model name") && return unless model
+
+                     ORMProxy.build(model, params[model])
+                   end
   end
 
 end

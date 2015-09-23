@@ -6,17 +6,33 @@ class ModelReceiver
     use Rack::PostBodyContentTypeParser
 
     post '/' do
-      headers('Content-Type' => 'text/plain')
-
-      args = params
-
-      model = ModelReceiver.new(args)
       model.modify
 
-      if model.has_error?
-        halt 422, model.error
-      else
-        "OK"
+      response_for(model)
+    end
+
+    post '/destroy' do
+      model.destroy
+
+      response_for(model)
+    end
+
+    helpers do
+      def model
+        @model ||= begin
+                     args = params
+                     ModelReceiver.new(args)
+                   end
+      end
+
+      def response_for(model)
+        content_type :text
+
+        if model.has_error?
+          halt 422, model.error
+        else
+          "OK"
+        end
       end
     end
 
