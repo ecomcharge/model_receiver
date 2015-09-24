@@ -65,6 +65,16 @@ describe ORMProxy do
         expect(subject.attributes).to eq(attributes)
       end
     end
+
+    context "when passed habtms associations" do
+      let(:model_name) { 'gateways' }
+      class Gateway;end
+
+      let(:attributes) { {'id' => 1, '_adds' => {'habtms' => {'brands' => ['1', '2', '3']}}} }
+      it "sets habtms values" do
+        expect(subject.habtms).to eq({'brands' => ['1', '2', '3']})
+      end
+    end
   end
 
 end

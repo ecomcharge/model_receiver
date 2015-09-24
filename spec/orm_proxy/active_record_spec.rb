@@ -31,6 +31,26 @@ describe ORMProxy::ActiveRecord do
           proxy.update_db
         end
       end
+
+      context "when habtms is present" do
+        class BrandsShop; end
+
+        let(:record) { double('record', id: 1) }
+        let(:attributes) { {'id' => 1, 'name' => 'test', '_adds' => {'habtms' => {'brands' => ['1', '2']}}} }
+
+        before do
+          expect(Shop).to receive(:find_by_id).with(1).and_return(record)
+          expect(record).to receive(:update_attributes).with(attrs_for_update, without_protection: true)
+        end
+
+        it "deletes all habmts previous values and inserts new passed values" do
+          expect(BrandsShop).to receive(:delete_all).with(["shop_id = ?", 1])
+          expect(BrandsShop).to receive(:create!).with({'shop_id' => 1, 'brand_id' => '1'}, without_protection: true)
+          expect(BrandsShop).to receive(:create!).with({'shop_id' => 1, 'brand_id' => '2'}, without_protection: true)
+
+          proxy.update_db
+        end
+      end
     end
 
   end

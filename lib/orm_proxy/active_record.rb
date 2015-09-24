@@ -1,14 +1,14 @@
 class ORMProxy
   class ActiveRecord < ORMProxy
 
-    def update_db
-      record = model_klass.find_by_id(attributes['id'])
-      if record
-        attributes.delete('id')
-        record.update_attributes(attributes, without_protection: true)
-      else
-        model_klass.create!(attributes, without_protection: true)
-      end
+    private
+
+    def create_record(klass, attrs)
+      klass.create!(attrs, without_protection: true)
+    end
+
+    def update_record(record, attrs)
+      record.update_attributes(attrs, without_protection: true)
     end
 
   end
