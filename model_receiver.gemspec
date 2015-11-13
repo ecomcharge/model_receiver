@@ -3,8 +3,8 @@ $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "model_receiver"
-  s.version     = "0.3.0"
-  s.authors     = ["Mikhail Davidovich"]
+  s.version     = "0.4.0"
+  s.authors     = ["Mikhail Davidovich", "Novikov Andrey"]
   s.email       = ["mihaildv@gmail.com"]
   s.homepage    = ""
   s.summary     = "ModelReceiver is a gem for syncing models between apps"
