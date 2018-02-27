@@ -12,11 +12,12 @@ class ORMProxy
     end
   end
 
-  attr_reader :model_name, :attributes, :habtms
+  attr_reader :model_name, :attributes, :habtms, :model_klass
   def initialize(model_name, attributes)
-    @model_name = model_name
-    @attributes = prepare_attributes(attributes)
-    @habtms = prepare_habtms(attributes)
+    @model_name  = model_name
+    @model_klass = prepare_model_class_name(attributes)
+    @attributes  = prepare_attributes(attributes)
+    @habtms      = prepare_habtms(attributes)
   end
 
   def update_db
@@ -45,10 +46,6 @@ class ORMProxy
 
   protected
 
-  def model_klass
-    model_name.classify.constantize
-  end
-
   def prepare_attributes(attrs)
     if model_klass.respond_to?(:column_names)
       columns = model_klass.column_names
@@ -60,6 +57,11 @@ class ORMProxy
 
   def prepare_habtms(attrs)
     attrs['_adds']['habtms'] if attrs['_adds']
+  end
+
+  def prepare_model_class_name(attrs)
+    klass = attrs.delete('_model_name') || model_name
+    klass.classify.constantize
   end
 
   private
