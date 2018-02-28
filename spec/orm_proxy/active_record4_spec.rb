@@ -51,8 +51,21 @@ describe ORMProxy::ActiveRecord4 do
           proxy.update_db
         end
       end
-    end
 
+      context "when _model_name attribute present" do
+        class NewModel; end
+
+        let(:attributes) { { 'id' => 1, 'name' => 'test', '_model_name' => 'NewModel' } }
+
+        it "uses passed model name as model class" do
+          expect(NewModel).to receive(:find_by_id).with(1).and_return(nil)
+          expect(NewModel).to receive(:create!).with(attributes)
+
+          proxy.update_db
+        end
+      end
+
+    end
   end
 
   describe "#destroy" do
