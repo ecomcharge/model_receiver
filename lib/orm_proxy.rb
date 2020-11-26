@@ -5,7 +5,7 @@ require 'active_support/core_ext/string/inflections'
 class ORMProxy
 
   def self.build(model_name, attributes)
-    if ::ActiveRecord::VERSION::MAJOR == 4
+    if ::ActiveRecord::VERSION::MAJOR >= 4
       ORMProxy::ActiveRecord4.new(model_name, attributes)
     else
       ORMProxy::ActiveRecord.new(model_name, attributes)

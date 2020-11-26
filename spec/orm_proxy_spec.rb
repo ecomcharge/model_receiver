@@ -12,10 +12,36 @@ describe ORMProxy do
     let(:model) { 'model' }
     let(:attributes) { {} }
 
-    context "when active_record version more than 4" do
+    context "when active_record version equal 4" do
        before do
         ActiveRecord::VERSION.send(:remove_const, 'MAJOR')
         ActiveRecord::VERSION.const_set('MAJOR', 4)
+      end
+
+      it "initializes ORMProxy::ActiveRecord4" do
+        expect(ORMProxy::ActiveRecord4).to receive(:new).with(model, attributes)
+
+        ORMProxy.build(model, attributes)
+      end
+    end
+
+    context "when active_record version equal 5" do
+       before do
+        ActiveRecord::VERSION.send(:remove_const, 'MAJOR')
+        ActiveRecord::VERSION.const_set('MAJOR', 5)
+      end
+
+      it "initializes ORMProxy::ActiveRecord4" do
+        expect(ORMProxy::ActiveRecord4).to receive(:new).with(model, attributes)
+
+        ORMProxy.build(model, attributes)
+      end
+    end
+
+    context "when active_record version equal 6" do
+       before do
+        ActiveRecord::VERSION.send(:remove_const, 'MAJOR')
+        ActiveRecord::VERSION.const_set('MAJOR', 6)
       end
 
       it "initializes ORMProxy::ActiveRecord4" do
