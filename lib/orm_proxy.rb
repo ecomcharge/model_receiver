@@ -23,9 +23,11 @@ class ORMProxy
   def update_db
     record = model_klass.find_by_id(attributes['id'])
     if record
-      unless skip_update?(record)
-        attributes.delete('id')
-        update_record(record, attributes)
+      record.with_lock do
+        unless skip_update?(record)
+          attributes.delete('id')
+          update_record(record, attributes)
+        end
       end
     else
       create_record(model_klass, attributes)

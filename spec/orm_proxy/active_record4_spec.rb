@@ -27,6 +27,7 @@ describe ORMProxy::ActiveRecord4 do
 
         it "updates record" do
           expect(Shop).to receive(:find_by_id).with(1).and_return(record)
+          expect(record).to receive(:with_lock).and_yield
           expect(record).to receive(:respond_to?).and_return(true)
           expect(record).to receive(:updated_at).and_return(Time.now - 5*60)
           expect(record).to receive(:update_attributes).with(attrs_for_update)
@@ -39,6 +40,7 @@ describe ORMProxy::ActiveRecord4 do
 
           it "skips outdated record update" do
             expect(Shop).to receive(:find_by_id).with(1).and_return(record)
+            expect(record).to receive(:with_lock).and_yield
             expect(record).to receive(:respond_to?).and_return(true)
             expect(record).to receive(:updated_at).and_return(Time.now)
             expect(record).not_to receive(:update_attributes)
@@ -56,6 +58,7 @@ describe ORMProxy::ActiveRecord4 do
 
         before do
           expect(Shop).to receive(:find_by_id).with(1).and_return(record)
+          expect(record).to receive(:with_lock).and_yield
           expect(record).to receive(:update_attributes).with(attrs_for_update)
         end
 
