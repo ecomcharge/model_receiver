@@ -23,8 +23,12 @@ class ORMProxy
   def update_db
     record = model_klass.find_by_id(attributes['id'])
     if record
-      attributes.delete('id')
-      update_record(record, attributes)
+      record.with_lock do
+        unless skip_update?(record)
+          attributes.delete('id')
+          update_record(record, attributes)
+        end
+      end
     else
       create_record(model_klass, attributes)
     end
@@ -65,6 +69,10 @@ class ORMProxy
   end
 
   private
+
+  def skip_update?(record)
+    record.respond_to?(:updated_at) && attributes.has_key?('updated_at') && record.updated_at > Time.parse(attributes['updated_at'])
+  end
 
   def model_key
     model_name.singularize.foreign_key

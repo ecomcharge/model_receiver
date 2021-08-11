@@ -4,8 +4,9 @@ describe ORMProxy::ActiveRecord4 do
 
   describe "#update_db" do
     let(:model)  { 'shops' }
-    let(:attributes) { {'id' => 1, 'name' => 'test'} }
-    let(:attrs_for_update) { {'name' => 'test'} }
+    let(:updated_at) { Time.now.to_s }
+    let(:attributes) { {'id' => 1, 'name' => 'test', 'updated_at' => updated_at} }
+    let(:attrs_for_update) { {'name' => 'test', 'updated_at' => updated_at} }
 
     let(:proxy) { described_class.new(model, attributes) }
 
@@ -26,9 +27,26 @@ describe ORMProxy::ActiveRecord4 do
 
         it "updates record" do
           expect(Shop).to receive(:find_by_id).with(1).and_return(record)
+          expect(record).to receive(:with_lock).and_yield
+          expect(record).to receive(:respond_to?).and_return(true)
+          expect(record).to receive(:updated_at).and_return(Time.now - 5*60)
           expect(record).to receive(:update_attributes).with(attrs_for_update)
 
           proxy.update_db
+        end
+
+        context "and there outedated update" do
+          let(:updated_at) { (Time.now - 10).to_s }
+
+          it "skips outdated record update" do
+            expect(Shop).to receive(:find_by_id).with(1).and_return(record)
+            expect(record).to receive(:with_lock).and_yield
+            expect(record).to receive(:respond_to?).and_return(true)
+            expect(record).to receive(:updated_at).and_return(Time.now)
+            expect(record).not_to receive(:update_attributes)
+
+            proxy.update_db
+          end
         end
       end
 
@@ -36,10 +54,11 @@ describe ORMProxy::ActiveRecord4 do
         class BrandsShop; end
 
         let(:record) { double('record', id: 1) }
-        let(:attributes) { {'id' => 1, 'name' => 'test', '_adds' => {'habtms' => {'brands' => ['1', '2']}}} }
+        let(:attributes) { {'id' => 1, 'name' => 'test', 'updated_at' => updated_at, '_adds' => {'habtms' => {'brands' => ['1', '2']}}} }
 
         before do
           expect(Shop).to receive(:find_by_id).with(1).and_return(record)
+          expect(record).to receive(:with_lock).and_yield
           expect(record).to receive(:update_attributes).with(attrs_for_update)
         end
 
@@ -55,7 +74,7 @@ describe ORMProxy::ActiveRecord4 do
       context "when _model_name attribute present" do
         class NewModel; end
 
-        let(:attributes) { { 'id' => 1, 'name' => 'test', '_model_name' => 'NewModel' } }
+        let(:attributes) { { 'id' => 1, 'name' => 'test', 'updated_at' => updated_at, '_model_name' => 'NewModel' } }
 
         it "uses passed model name as model class" do
           expect(NewModel).to receive(:find_by_id).with(1).and_return(nil)

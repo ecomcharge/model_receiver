@@ -74,7 +74,7 @@ describe ORMProxy do
     context "when model responds to 'column_names'" do
       class Shop
         def self.column_names
-          ['id', 'name']
+          ['id', 'name', 'updated_at']
         end
       end
 
