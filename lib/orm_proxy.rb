@@ -89,7 +89,7 @@ class ORMProxy
       habtm_model = [model_name, habtm].sort.join("_")
       habtm_class = habtm_model.singularize.classify.constantize
 
-      habtm_class.delete_all(["#{model_key} = ?", record.id])
+      habtm_class.where(["#{model_key} = ?", record.id]).delete_all
       habtm_key = habtm_key(habtm)
 
       values.each do |value|
