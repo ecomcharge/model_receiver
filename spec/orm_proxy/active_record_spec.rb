@@ -54,6 +54,7 @@ describe ORMProxy::ActiveRecord do
         class BrandsShop; end
 
         let(:record) { double('record', id: 1) }
+        let(:relation) { double(:relation) }
         let(:attributes) { {'id' => 1, 'name' => 'test', 'updated_at' => updated_at, '_adds' => {'habtms' => {'brands' => ['1', '2']}}} }
 
         before do
@@ -63,7 +64,8 @@ describe ORMProxy::ActiveRecord do
         end
 
         it "deletes all habmts previous values and inserts new passed values" do
-          expect(BrandsShop).to receive(:delete_all).with(["shop_id = ?", 1])
+          expect(relation).to receive(:delete_all)
+          expect(BrandsShop).to receive(:where).with(["shop_id = ?", 1]).and_return(relation)
           expect(BrandsShop).to receive(:create!).with({'shop_id' => 1, 'brand_id' => '1'}, without_protection: true)
           expect(BrandsShop).to receive(:create!).with({'shop_id' => 1, 'brand_id' => '2'}, without_protection: true)
 
