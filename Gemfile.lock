@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    model_receiver (0.5.2)
+    model_receiver (0.5.3)
       activesupport
       rack-contrib
       sinatra (>= 1.3)
