@@ -1,3 +1,4 @@
+require 'orm_proxy/active_record6'
 require 'orm_proxy/active_record4'
 require 'orm_proxy/active_record'
 require 'active_support/core_ext/string/inflections'
@@ -5,7 +6,9 @@ require 'active_support/core_ext/string/inflections'
 class ORMProxy
 
   def self.build(model_name, attributes)
-    if ::ActiveRecord::VERSION::MAJOR >= 4
+    if ::ActiveRecord::VERSION::MAJOR >= 6
+      ORMProxy::ActiveRecord6.new(model_name, attributes)
+    elsif ::ActiveRecord::VERSION::MAJOR >= 4
       ORMProxy::ActiveRecord4.new(model_name, attributes)
     else
       ORMProxy::ActiveRecord.new(model_name, attributes)
