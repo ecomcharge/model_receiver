@@ -44,8 +44,8 @@ describe ORMProxy do
         ActiveRecord::VERSION.const_set('MAJOR', 6)
       end
 
-      it "initializes ORMProxy::ActiveRecord4" do
-        expect(ORMProxy::ActiveRecord4).to receive(:new).with(model, attributes)
+      it "initializes ORMProxy::ActiveRecord6" do
+        expect(ORMProxy::ActiveRecord6).to receive(:new).with(model, attributes)
 
         ORMProxy.build(model, attributes)
       end
